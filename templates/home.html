@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Tracking App</title>
+</head>
+<body>
+
+    <h1>Testing 1,2,3,4!</h1>
+
+    <div class="form">
+        <h2> Add Team </h2>
+        <form action="{{ url_for('add_team') }}" method="POST">
+            {{ team_form.csrf_token() }}
+            {{ team_form.team_name.label }}
+            {{ team_form.team_name }}
+            {{ team_form.submit.label }}
+            {{ team_form.submit }}
+        </form>
+    </div>
+    
+    <div class="form">
+        <h2> Add Project </h2>
+        <form action="{{ url_for('add_project') }}" method="POST">
+            {{ project_form.csrf_token() }}
+            {{ project_form.project_name.label }}
+            {{ project_form.project_name }}
+            {{ project_form.description.label }}
+            {{ project_form.description }}
+            {{ project_form.completed.label }}
+            {{ project_form.completed }}
+            {{ project_form.team_id.label }}
+            {{ project_form.team_id }}
+            {{ project_form.submit.label }}
+            {{ project_form.submit }}
+        </form>
+    </div>
+    
+    <div class="form">
+        <h2> Select User </h2>
+        <form action="{{ url_for('select_user') }}" method="POST">
+            {{ user_form.csrf_token() }}
+            {{ user_form.select_user.label }}
+            {{ user_form.select_user }}
+            {{ user_form.submit.label }}
+            {{ user_form.submit }}
+        </form>
+    </div>
+    <br>
+    <div>
+        user: {{ user.username }}
+        <br><br>
+        Teams and projects: 
+        <ul>
+            {% for team in teams %}
+              <li>{{ team.team_name }}</li>
+              <ul>
+                {% for project in projects %}
+                    {% if project.team_id == team.id %}
+                        <li>{{ project.project_name }}</li>
+                        <ul>
+                            {% if project.description != '' %}
+                                <li> 
+                                    Description: {{ project.description }}
+                                </li>
+                            {% endif %}
+                            <li> Completed: {{ project.completed }}</li>
+                            <li> ID of team assigned to project: {{ project.team_id }}</li>
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="form">
+        <h2> Edit Team </h2>
+        <form action="{{ url_for('edit_team') }}" method="POST">
+            {{ edit_team_form.csrf_token() }}
+            {{ edit_team_form.team_id.label }}
+            {{ edit_team_form.team_id }} to
+            {{ edit_team_form.team_name.label }}
+            {{ edit_team_form.team_name }}
+            {{ edit_team_form.submit.label }}
+            {{ edit_team_form.submit }}
+        </form>
+    </div>
+
+    <div class="form">
+        <h2> Edit Project </h2>
+        <form action="{{ url_for('edit_project') }}" method="POST">
+            {{ edit_project_form.csrf_token() }}
+
+            {{ edit_project_form.project_id.label }}
+            {{ edit_project_form.project_id }}
+
+            {{ edit_project_form.project_name.label }}
+            {{ edit_project_form.project_name }}
+            {{ edit_project_form.description.label }}
+            {{ edit_project_form.description }}
+            {{ edit_project_form.completed.label }}
+            {{ edit_project_form.completed }}
+            {{ edit_project_form.team_id.label }}
+            {{ edit_project_form.team_id }}
+            {{ edit_project_form.submit.label }}
+            {{ edit_project_form.submit }}
+        </form>
+    </div>
+
+    <div class="form">
+        <h2> Delete Team </h2>
+        <form action="{{ url_for('delete_team') }}" method="POST">
+            {{ delete_team_form.csrf_token() }}
+            {{ delete_team_form.team_id.label }}
+            {{ delete_team_form.team_id }}
+            {{ delete_team_form.submit.label }}
+            {{ delete_team_form.submit }}
+        </form>
+    </div>
+
+    <div class="form">
+        <h2> Delete Project </h2>
+        <form action="{{ url_for('delete_project') }}" method="POST">
+            {{ delete_project_form.csrf_token() }}
+            {{ delete_project_form.project_id.label }}
+            {{ delete_project_form.project_id }}
+            {{ delete_project_form.submit.label }}
+            {{ delete_project_form.submit }}
+        </form>
+    </div>
+
+</body>
+</html>
