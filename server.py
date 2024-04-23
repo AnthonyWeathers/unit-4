@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, flash, redirect, url_for
 from forms import TeamForm, ProjectForm, UserForm, EditTeamForm, EditProjectForm, DeleteTeamForm, DeleteProjectForm
 from model import db, User, Team, Project, connect_to_db
 
@@ -49,11 +49,15 @@ def add_team():
     team_form = TeamForm()
 
     if team_form.validate_on_submit():
-        print(team_form.team_name.data)
         team_name = team_form.team_name.data
-        new_team = Team(team_name, user_id)
-        db.session.add(new_team)
-        db.session.commit()
+
+        if Team.query.filter_by(team_name=team_name).first():
+            flash(f'Team: {team_name} already exists')
+        else:
+            new_team = Team(team_name, user_id)
+            db.session.add(new_team)
+            db.session.commit()
+
         return redirect(url_for("home"))
     else:
         print("Form failed to validate on submit.")
@@ -162,11 +166,14 @@ def delete_team():
     team_form.update_teams(User.query.get(user_id).teams)
 
     if team_form.validate_on_submit():
+
         team_id = team_form.team_id.data
         team = Team.query.filter_by(id = team_id).first()
-
-        db.session.delete(team)
-        db.session.commit()
+        if team.projects:
+            flash(f'{team.team_name} still has projects assigned to them')
+        else:
+            db.session.delete(team)
+            db.session.commit()
         return redirect(url_for("home"))
     else:
         print("Form failed to validate on submit.")
